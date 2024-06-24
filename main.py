@@ -164,6 +164,7 @@ def main(args):
         print('Model definition:')
         print(model)
 
+    print("Distributed: ", args.distributed)
     if args.distributed:
         model = torch.nn.parallel.DistributedDataParallel(
             model.to(device),
@@ -195,6 +196,7 @@ def main(args):
         print('Load checkpoint: %s' % args.resume)
 
         loc = 'cuda:{}'.format(args.local_rank)
+        print("Location: ", loc)
         checkpoint = torch.load(args.resume, map_location=loc)
 
         weights = checkpoint['model'] if 'model' in checkpoint else checkpoint
@@ -314,6 +316,10 @@ def main(args):
 
     # inferece on a dir
     if args.inference_dir is not None:
+        print("Inference size: ", args.inference_size)
+        print("paired data: ", args.dir_paired_data)
+        print("pred_bidir_flow: ", args.pred_bidir_flow)
+        print("fwd_bwd_consistency_check: ",args.fwd_bwd_consistency_check)
         inference_on_dir(model_without_ddp,
                          inference_dir=args.inference_dir,
                          output_path=args.output_path,
